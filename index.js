@@ -1,5 +1,4 @@
 const body = document.querySelector("body");
-body.style.height = "100vh";
 
 const askForANumber = () => {
   const result = Number(prompt("Insert a number from 0 to 100"));
@@ -7,14 +6,33 @@ const askForANumber = () => {
 };
 
 const fillWithColor = e => {
-  e.target.style.backgroundColor = "green";
+  if (e.target.style.backgroundColor) {
+    let colorValues = e.target.style.backgroundColor.slice(4).split(",");
+    colorValues = colorValues.map(v => v.trim());
+    let red = colorValues[0] - 20 > 0 ? colorValues[0] - 20 : 0;
+    let green = colorValues[1] - 20 > 0 ? colorValues[1] - 20 : 0;
+    let blue =
+      colorValues[2].substring(0, colorValues[2].length - 1) - 20 > 0
+        ? colorValues[2].substring(0, colorValues[2].length - 1) - 20
+        : 0;
+    e.target.style.backgroundColor = `rgb(${red}, ${green}, ${blue})`;
+  } else {
+    e.target.style.backgroundColor = `rgb(${Math.round(
+      Math.random() * 255
+    )}, ${Math.round(Math.random() * 255)}, ${Math.round(
+      Math.random() * 255
+    )})`;
+  }
 };
 
 const createGrid = numOfSquares => {
   body.textContent = "";
   const container = document.createElement("div");
   container.className = "container";
-  container.style = `display: grid;
+  container.style = `max-width: 100vw;
+                        max-height: 90vh;
+                        aspect-ratio: 1;
+                        display: grid;
                         grid-template-columns: repeat(${
                           numOfSquares || 16
                         }, 1fr);
@@ -32,6 +50,9 @@ const createGrid = numOfSquares => {
   for (let i = 1; i <= (Math.pow(numOfSquares, 2) || 256); i++) {
     const div = document.createElement("div");
     div.className = "square";
+    div.style.height = `${90 / numOfSquares}vh`;
+    div.style.border = '1px solid green';
+    div.style.aspectRatio = '1';
     container.appendChild(div);
   }
 
